@@ -10,7 +10,7 @@ WITH laba AS (
     a.price,                              -- harga asli (sebelum diskon)
     a.discount_percentage,                -- diskon (HARUS dalam bentuk desimal: 0.1 = 10%)
     CASE                                  -- hitung persentase gross laba berdasarkan range harga
-      WHEN a.price <= 50000 THEN 0.15
+      WHEN a.price <= 50000 THEN 0.10
       WHEN a.price > 50000 AND a.price <= 100000 THEN 0.15
       WHEN a.price > 100000 AND a.price <= 300000 THEN 0.20
       WHEN a.price > 300000 AND a.price <= 500000 THEN 0.25
@@ -23,12 +23,12 @@ WITH laba AS (
 -- 3) SELECT utama: ambil kolom-kolom final untuk dimasukkan ke tabel baru
 SELECT 
   t.transaction_id,
-  t.`date`,                              -- backtick karena "date" kadang reserved word; atau rename jadi transaction_date
+  t.date,                            
   c.branch_id,
   c.branch_name,
   c.kota,
   c.provinsi,
-  c.rating AS rating_cabang,             -- beri alias supaya tidak bingung dengan rating_transaksi
+  c.rating AS rating_cabang,             -- ubah nama kolom menggunakan AS(alias) -> rating_transaksi
   t.customer_name,
   p.product_id,
   p.product_name,
@@ -54,4 +54,5 @@ JOIN `rakamin-kf-analytics-472913.kimia_farma.kf_kantor_cabang` c
 -- 5) JOIN ke CTE 'laba' berdasarkan transaction_id supaya tiap baris transaksi dapat kolom hasil perhitungan
 JOIN laba l 
   ON t.transaction_id = l.transaction_id;
+
 
