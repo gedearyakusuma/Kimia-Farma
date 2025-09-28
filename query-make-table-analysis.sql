@@ -6,10 +6,10 @@ CREATE OR REPLACE TABLE `rakamin-kf-analytics-472913.kimia_farma.kf_final_analys
 --    sehingga perhitungan itu bisa dipanggil ulang di SELECT utama tanpa menulis ulang CASE.
 WITH laba AS (
   SELECT 
-    a.transaction_id,                     -- bawa kunci unik supaya nanti bisa JOIN ke tabel transaksi
+    a.transaction_id,                     -- sebagai kunci unik supaya nanti bisa JOIN ke tabel transaksi
     a.price,                              -- harga asli (sebelum diskon)
     a.discount_percentage,                -- diskon (HARUS dalam bentuk desimal: 0.1 = 10%)
-    CASE                                  -- hitung persentase gross laba berdasarkan range harga
+    CASE                                  -- CASE hitung persentase gross laba berdasarkan range harga
       WHEN a.price <= 50000 THEN 0.10
       WHEN a.price > 50000 AND a.price <= 100000 THEN 0.15
       WHEN a.price > 100000 AND a.price <= 300000 THEN 0.20
@@ -20,7 +20,7 @@ WITH laba AS (
   FROM `rakamin-kf-analytics-472913.kimia_farma.kf_final_transaction` a
 )
 
--- 3) SELECT utama: ambil kolom-kolom final untuk dimasukkan ke tabel baru
+-- 3) SELECT:  ambil kolom-kolom dari tabel lain untuk dimasukkan ke tabel baru
 SELECT 
   t.transaction_id,
   t.date,                            
@@ -28,11 +28,11 @@ SELECT
   c.branch_name,
   c.kota,
   c.provinsi,
-  c.rating AS rating_cabang,             -- ubah nama kolom menggunakan AS(alias) -> rating_transaksi
+  c.rating AS rating_cabang,             -- ubah nama kolom rating menggunakan AS(alias) -> rating_cabang
   t.customer_name,
   p.product_id,
   p.product_name,
-  t.price AS actual_price,
+  t.price AS actual_price,               -- ubah nama kolom price menggunakan AS(alias) -> actual_price
   t.discount_percentage,
 
   l.persentase_gross_laba,               -- ambil hasil CASE dari CTE
@@ -54,5 +54,4 @@ JOIN `rakamin-kf-analytics-472913.kimia_farma.kf_kantor_cabang` c
 -- 5) JOIN ke CTE 'laba' berdasarkan transaction_id supaya tiap baris transaksi dapat kolom hasil perhitungan
 JOIN laba l 
   ON t.transaction_id = l.transaction_id;
-
 
