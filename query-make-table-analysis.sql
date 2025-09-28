@@ -1,5 +1,5 @@
 -- 1) Buat tabel baru kf_final_analysis dari hasil SELECT di bawah
-CREATE TABLE `rakamin-kf-analytics-472913.kimia_farma.kf_final_analysis` AS
+CREATE OR REPLACE TABLE `rakamin-kf-analytics-472913.kimia_farma.kf_final_analysis` AS -- Fungsi REPLACE untuk update jika ada pembaruan data
 
 -- 2) CTE (Common Table Expression) bernama 'laba'
 --    CTE ini fokus hanya pada perhitungan yang pakai CASE WHEN dan nett_sales,
@@ -54,3 +54,4 @@ JOIN `rakamin-kf-analytics-472913.kimia_farma.kf_kantor_cabang` c
 -- 5) JOIN ke CTE 'laba' berdasarkan transaction_id supaya tiap baris transaksi dapat kolom hasil perhitungan
 JOIN laba l 
   ON t.transaction_id = l.transaction_id;
+
