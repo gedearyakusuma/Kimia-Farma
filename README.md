@@ -34,3 +34,6 @@ And must cover:
 - Top 5 Branches with Highest Ratings but Lowest Transaction Ratings
 - Indonesia Geo Map of Total Profit per Province
 - Additional exploratory analysis
+
+### Link Dashboard
+https://lookerstudio.google.com/reporting/cb931302-816e-4b18-95be-3a29857d0efe
